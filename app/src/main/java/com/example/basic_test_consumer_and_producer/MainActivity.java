@@ -10,6 +10,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import net.named_data.jndn.Data;
 import net.named_data.jndn.Interest;
@@ -18,8 +19,6 @@ import net.named_data.jndn.Name;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-
-    public static final int CONSUMER_SEND_RATE = 1000; // ms per interest
 
     private static final int PRODUCER = 0, CONSUMER = 1;
     private static int mode;
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button chooseModeButton_;
     Button startButton_;
+    EditText consumerSendRateInput_;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +112,13 @@ public class MainActivity extends AppCompatActivity {
                             networkThreadConsumer_.getHandler()
                                     .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, interest)
                                     .sendToTarget();
-                            SystemClock.sleep(CONSUMER_SEND_RATE);
+                            SystemClock.sleep(Long.parseLong(consumerSendRateInput_.getText().toString()));
                         }
                 }
             }
         });
+
+        consumerSendRateInput_ = (EditText) findViewById(R.id.consumer_send_rate_input);
 
     }
 

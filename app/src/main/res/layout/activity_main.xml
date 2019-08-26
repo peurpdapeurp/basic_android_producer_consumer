@@ -19,6 +19,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/consumer_send_rate_input_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Consumer Send Rate (ms per interest)" />
+
+        <EditText
+            android:id="@+id/consumer_send_rate_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="1000" />
+
         <Button
             android:id="@+id/choose_mode_button"
             android:layout_width="match_parent"
