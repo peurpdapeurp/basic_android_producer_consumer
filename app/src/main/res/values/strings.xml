@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">btcp</string>
+    <string name="producer_mode">Producer</string>
+    <string name="consumer_mode">Consumer</string>
+</resources>
