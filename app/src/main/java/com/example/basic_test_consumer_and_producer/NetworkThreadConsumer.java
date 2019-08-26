@@ -78,6 +78,7 @@ public class NetworkThreadConsumer extends HandlerThread {
             face_.expressInterest(interest, new OnData() {
                 @Override
                 public void onData(Interest interest, Data data) {
+                    MainActivity.modifyNumOutstandingInterests(-1);
                     long satisfiedTime = System.currentTimeMillis();
                     Log.d(TAG, getTimeSinceNetworkThreadStart() + ": " + "data received (" +
                             "name " + data.getName().toString() + ", " +
@@ -85,6 +86,7 @@ public class NetworkThreadConsumer extends HandlerThread {
                     mainActivityHandler_.obtainMessage(MainActivity.MSG_DATA_RECEIVED, data).sendToTarget();
                 }
             });
+            MainActivity.modifyNumOutstandingInterests(1);
         } catch (IOException e) {
             e.printStackTrace();
         }

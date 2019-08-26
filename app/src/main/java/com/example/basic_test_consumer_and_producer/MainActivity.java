@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    public static final int CONSUMER_SEND_RATE = 1000; // ms per interest
+
     private static final int PRODUCER = 0, CONSUMER = 1;
     private static int mode;
 
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     NetworkThreadConsumer networkThreadConsumer_;
     NetworkThreadProducer networkThreadProducer_;
 
-    int numOutstandingInterests_ = 0;
+    public static int numOutstandingInterests_ = 0;
     long currentSegNum_ = 0;
     Name currentStreamName_;
 
@@ -66,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
         startButton_.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 chooseModeButton_.setEnabled(false);
                 startButton_.setEnabled(false);
+
                 if (chooseModeButton_.getText().toString().equals(getString(R.string.producer_mode)))
                     mode = PRODUCER;
                 else
@@ -90,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                                                 "received data (" +
                                                 "name: " + data.getName().toString() +
                                                 ")");
-                                        modifyNumOutstandingInterests(-1);
                                         break;
                                     default:
                                         throw new IllegalStateException();
@@ -109,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                             networkThreadConsumer_.getHandler()
                                     .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, interest)
                                     .sendToTarget();
-                            SystemClock.sleep(1000);
+                            SystemClock.sleep(CONSUMER_SEND_RATE);
                         }
                 }
             }
@@ -117,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void modifyNumOutstandingInterests(int modifier) {
+    public static void modifyNumOutstandingInterests(int modifier) {
         Log.d(TAG, System.currentTimeMillis() + ": " +
                 "modifying numOutstandingInterests_ (" +
                 "current value: " + numOutstandingInterests_ + ", " +
