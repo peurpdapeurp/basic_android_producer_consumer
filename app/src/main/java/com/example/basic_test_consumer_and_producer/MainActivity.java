@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int MSG_DATA_RECEIVED = 0;
 
-    public static final String STREAM_NAME = "/test";
+    public static final String STREAM_NAME = "/ndnpttv2";
 
     MainActivity mainActivity_;
     Handler handler_;
@@ -105,15 +105,38 @@ public class MainActivity extends AppCompatActivity {
                         networkThreadConsumer_.start();
                         while (networkThreadConsumer_.getHandler() == null) {}
 
-                        while (true) {
-                            Name interestName = new Name(currentStreamName_);
-                            Interest interest = new Interest(interestName.appendSegment(currentSegNum_));
-                            currentSegNum_++;
-                            networkThreadConsumer_.getHandler()
-                                    .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, interest)
-                                    .sendToTarget();
-                            SystemClock.sleep(Long.parseLong(consumerSendRateInput_.getText().toString()));
-                        }
+                        Interest i1 = new Interest("/1");
+                        Interest i2 = new Interest("/2");
+                        Interest i3 = new Interest("/3");
+                        Interest i4 = new Interest("/4");
+
+                        Message msg1 = networkThreadConsumer_.getHandler()
+                                .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, i1);
+                        Message msg2 = networkThreadConsumer_.getHandler()
+                                .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, i2);
+                        Message msg3 = networkThreadConsumer_.getHandler()
+                                .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, i3);
+                        Message msg4 = networkThreadConsumer_.getHandler()
+                                .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, i4);
+
+                        networkThreadConsumer_.getHandler().sendMessage(msg1);
+                        networkThreadConsumer_.getHandler().sendMessageAtTime(
+                                msg2, SystemClock.uptimeMillis() + 5000
+                        );
+                        networkThreadConsumer_.getHandler().sendMessage(msg3);
+                        networkThreadConsumer_.getHandler().sendMessageAtTime(
+                                msg4, SystemClock.uptimeMillis() + 1000
+                        );
+
+//                        while (true) {
+//                            Name interestName = new Name(currentStreamName_);
+//                            Interest interest = new Interest(interestName.appendSegment(currentSegNum_));
+//                            currentSegNum_++;
+//                            networkThreadConsumer_.getHandler()
+//                                    .obtainMessage(NetworkThreadConsumer.MSG_INTEREST_SEND_REQUEST, interest)
+//                                    .sendToTarget();
+//                            SystemClock.sleep(Long.parseLong(consumerSendRateInput_.getText().toString()));
+//                        }
                 }
             }
         });

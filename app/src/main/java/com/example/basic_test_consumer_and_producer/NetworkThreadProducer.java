@@ -85,6 +85,22 @@ public class NetworkThreadProducer implements Runnable {
                                     ")");
                             Data data = new Data(interest.getName());
                             data.setContent(new Blob(new byte[] {0}));
+
+                            long segNum;
+                            try {
+                                segNum = data.getName().get(-1).toSegment();
+                            } catch (EncodingException e) {
+                                e.printStackTrace();
+                                return;
+                            }
+
+                            // set every 1/50 data packets to have a final block id matching its segment number
+                            long randomLong = Helpers.getRandomLongBetweenRange(0, 50);
+                            Log.d(TAG, "Random long for setting final block id: " + randomLong);
+                            if (randomLong == 25) {
+                                data.getMetaInfo().setFinalBlockId(Name.Component.fromSegment(segNum));
+                            }
+
                             try {
                                 keyChain_.sign(data);
                                 face_.putData(data);
